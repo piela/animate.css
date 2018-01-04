@@ -123,17 +123,21 @@ You can also extend jQuery to add a function that does it all for you:
 
 ```javascript
 $.fn.extend({
-    animateCss: function (animationName, callback) {
-        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-        this.addClass('animated ' + animationName).one(animationEnd, function() {
-            $(this).removeClass('animated ' + animationName);
-            if (callback) {
-              callback();
-            }
-        });
-        return this;
-    }
-});
+        animateCss: function (animationName, callback) {
+            var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+            var that = this;
+            this.addClass('animated ' + animationName).one(animationEnd, function (e) {
+                if (e.target == $(that).get(0))
+                {
+                    $(this).removeClass('animated ' + animationName);
+                    if (callback) {
+                        callback();
+                    }
+                }
+            });
+            return this;
+        }
+    });
 ```
 
 And use it like this:
